@@ -1,0 +1,44 @@
+﻿<Window x:Class="VKR.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VKR"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="ВКР" Height="640" Width="1100" MinHeight="640" MinWidth="1100" WindowStyle="ThreeDBorderWindow"
+        KeyDown="KeyDownEvents">
+        
+    <Grid x:Name="MainGrid" Background="#FFD861">
+        <Border MinHeight="600" MinWidth="1050"  Margin="15" Padding="10" Background="#FFEBAF" VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" Color="LightGray"></DropShadowEffect>
+            </Border.Effect>
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">
+                    <TextBlock  Text="ВКР" Cursor="AppStarting" FontSize="24" Margin="0,0,0,4" x:Name="ProgramName"></TextBlock>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
+                    
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5">
+                    <TextBlock  Text="{Binding Path=tape}" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="5" Cursor="AppStarting" FontSize="40" Margin="0,0,0,4" x:Name="Tape" TextAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
