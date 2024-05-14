@@ -9,7 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="TextFiles\" />
+    <Compile Remove="TextFiles\**" />
+    <EmbeddedResource Remove="TextFiles\**" />
+    <None Remove="TextFiles\**" />
+    <Page Remove="TextFiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModel\" />
   </ItemGroup>
 
   <ItemGroup>

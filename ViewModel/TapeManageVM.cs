@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VKR
+namespace VKR.ViewModel
 {
-    class Statistic
+    internal class TapeManageVM
     {
     }
 }

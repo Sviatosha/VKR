@@ -8,22 +8,59 @@ using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Reflection.Emit;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
-namespace VKR
+namespace VKR.Models
 {
-    class TextTape
+    class TextTape : INotifyPropertyChanged
     {
-        public string textPath { get; set; }
-        public string tape { get; set; }
+        private string textPath { get; set; }
+        private string tape { get; set; }
         private char letter { get; set; }
 
+        public string TextPath
+        {
+            get { return textPath; }
+            set
+            {
+                textPath = value;
+                OnPropertyChanged("TextPath");
+            }
+        }
+        public string Tape
+        {
+            get { return tape; }
+            set
+            {
+                tape = value;
+                OnPropertyChanged("Tape");
+            }
+        }
+        public char Letter
+        {
+            get { return letter; }
+            set
+            {
+                letter = value;
+                OnPropertyChanged("Letter");
+            }
+        }
 
-        public TextTape()
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        /*public TextTape()
         {
             textPath = "";
             this.tape = "";
             //классы обьявить
-        }
+        }*/
         public void textTapeWait()
         {
             tape = "          " + " Enter-начать Bcsp-пауза cntl+Bcsp-Остановить";
@@ -56,7 +93,7 @@ namespace VKR
                 }
                 tape = "          " + line;
                 letter = tape[10];
-                
+
                 //Tape.Text = tape;
             }
             catch (Exception e)
@@ -76,7 +113,7 @@ namespace VKR
         }
         public void tapeScroll()
         {
-            tape=tape.Remove(0);
+            tape = tape.Remove(0);
             letter = tape[10];
             //при нажатии на кнопку сравниваемый символ перемещается к следующему
         }
@@ -93,7 +130,7 @@ namespace VKR
         {
             //обработчик нажатия
         }
-        
+
         private void textBox_Click(object sender, EventArgs e)
         {
 

@@ -16,8 +16,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Net.WebRequestMethods;
 using System.Reflection.Emit;
+using VKR.Models;
 
-namespace VKR
+namespace VKR.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,14 +28,15 @@ namespace VKR
         public MainWindow()
         {
             InitializeComponent();
-
+/*
             TextTape tape = new TextTape();
             tape.textTapeWait();
+
             this.DataContext = tape;
 
             string textPath = @"Files\TextFiles\TestLesson.txt";
 
-            initiateTapeTest(textPath,tape);
+            initiateTapeTest(textPath,tape);*/
 
         }
         private void initiateTapeTest(string textPath,TextTape tape)
@@ -50,17 +52,14 @@ namespace VKR
         }
         private void KeyDownEvents(object sender, KeyEventArgs e)
         {
-            
-            
-            
-            
-           /* string s = "Event" + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
-            ProgramName.Text += s;
 
-            if ((bool)chkIgnoreRepeat.IsChecked && e.IsRepeat) return;
-            i++;
-            string s = "Event" + i + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
-            lbxEvents.Items.Add(s);*/
+            /* string s = "Event" + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
+             ProgramName.Text += s;
+
+             if ((bool)chkIgnoreRepeat.IsChecked && e.IsRepeat) return;
+             i++;
+             string s = "Event" + i + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
+             lbxEvents.Items.Add(s);*/
         }
         /*
                 
