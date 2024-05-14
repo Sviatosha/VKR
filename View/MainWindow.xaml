@@ -1,9 +1,9 @@
-﻿<Window x:Class="VKR.MainWindow"
+﻿<Window x:Class="VKR.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VKR"
+        xmlns:local="clr-namespace:VKR.View"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="ВКР" Height="640" Width="1100" MinHeight="640" MinWidth="1100" WindowStyle="ThreeDBorderWindow"
@@ -33,7 +33,11 @@
                     <TextBlock  Text="ВКР" Cursor="AppStarting" FontSize="24" Margin="0,0,0,4" x:Name="ProgramName"></TextBlock>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
-                    
+                    <TabControl>
+                        <TabItem Name="Lessons">
+                            <TextBlock Text="Уроки"/>
+                        </TabItem>
+                    </TabControl>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5">
                     <TextBlock  Text="{Binding Path=tape}" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="5" Cursor="AppStarting" FontSize="40" Margin="0,0,0,4" x:Name="Tape" TextAlignment="Right"/>
