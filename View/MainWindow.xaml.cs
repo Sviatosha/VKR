@@ -14,32 +14,36 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections;
 using static System.Net.WebRequestMethods;
 using System.Reflection.Emit;
 using VKR.Models;
+using System.Printing;
 
 namespace VKR.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            InitializeComponent();
-/*
             TextTape tape = new TextTape();
             tape.textTapeWait();
-
-            this.DataContext = tape;
+            //this.DataContext = myTextTape[0];
+            InitializeComponent();
+            myTextTape.Add(tape);
 
             string textPath = @"Files\TextFiles\TestLesson.txt";
 
-            initiateTapeTest(textPath,tape);*/
+            initiateTapeTest(textPath, tape);
+            Tape.Text = myTextTape[0].Tape;
 
         }
-        private void initiateTapeTest(string textPath,TextTape tape)
+    private static TextTapeSingleton myTextTape = TextTapeSingleton.GetInstance();
+    private void initiateTapeTest(string textPath,TextTape tape)
         {
             string currentPath = Directory.GetCurrentDirectory();
             string filePath = System.IO.Path.Combine(currentPath, textPath);
@@ -50,41 +54,32 @@ namespace VKR.View
         {
             tape.textTapeWait();
         }
-        private void KeyDownEvents(object sender, KeyEventArgs e)
+        private void KeyEvents(object sender, KeyEventArgs e)
         {
 
-            /* string s = "Event" + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
-             ProgramName.Text += s;
 
-             if ((bool)chkIgnoreRepeat.IsChecked && e.IsRepeat) return;
+            /*string s = "Event" + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
+            ProgramName.Text = s;*/
+
+           /* myTextTape[0].keyClick(sender, e);
+
+            Tape.Text = myTextTape[0].Tape;*/
+
+            /* if ((bool)chkIgnoreRepeat.IsChecked && e.IsRepeat) return;
              i++;
              string s = "Event" + i + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
              lbxEvents.Items.Add(s);*/
+
         }
-        /*
-                
-                private void Clear_Click(object sender, RoutedEventArgs e)
-                {
-                    lbxEvents.Items.Clear();
-                    txtContent.Clear();
-                    i = 0;
-                }
 
-                protected int i = 0;
-                private void KeyEvents(object sender, KeyEventArgs e)
-                {
-                    if ((bool)chkIgnoreRepeat.IsChecked && e.IsRepeat) return;
-                    i++;
-                    string s = "Event" + i + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
-                    lbxEvents.Items.Add(s);
-                }
+        private void TextInputEvent(object sender, TextCompositionEventArgs e)
+        {
 
-                private void TextInputEvent(object sender, TextCompositionEventArgs e)
-                {
-                    i++;
-                    string s = "Event" + i + ": " + e.RoutedEvent + " Клавиша: " + e.Text;
-                    lbxEvents.Items.Add(s);
-                }
-        */
+            myTextTape[0].keyClick(sender, e);
+            ProgramName.Text = myTextTape[0].IsTaping.ToString()+" "+ myTextTape[0].Tape[10] + " " +e.Text;
+
+            Tape.Text = myTextTape[0].Tape;
+        }
+
     }
 }

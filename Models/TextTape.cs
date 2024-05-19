@@ -11,14 +11,15 @@ using System.Reflection.Emit;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Collections;
 
 namespace VKR.Models
 {
-    class TextTape : INotifyPropertyChanged
+    class TextTape //: INotifyPropertyChanged
     {
         private string textPath { get; set; }
         private string tape { get; set; }
-        private char letter { get; set; }
+        private bool isTaping { get; set; }
 
         public string TextPath
         {
@@ -38,13 +39,13 @@ namespace VKR.Models
                 OnPropertyChanged("Tape");
             }
         }
-        public char Letter
+        public bool IsTaping
         {
-            get { return letter; }
+            get { return isTaping; }
             set
             {
-                letter = value;
-                OnPropertyChanged("Letter");
+                isTaping = value;
+                OnPropertyChanged("isTaping");
             }
         }
 
@@ -55,27 +56,28 @@ namespace VKR.Models
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        /*public TextTape()
+        public TextTape()
         {
-            textPath = "";
-            this.tape = "";
+            TextPath = "";
+            this.Tape = "";
+            IsTaping = false;
             //классы обьявить
-        }*/
+        }
         public void textTapeWait()
         {
-            tape = "          " + " Enter-начать Bcsp-пауза cntl+Bcsp-Остановить";
-            letter = tape[10];
+            Tape = "          " + " Enter-начать Bcsp-пауза cntl+Bcsp-Остановить";
+            IsTaping = false;
         }
         public void initiateFileTape(string Path)
         {
-            textPath = Path;
+            TextPath = Path;
             string? buffer;
             string? oldbuffer = "";
             string line = "";
             try
             {
                 //Pass the file path and file name to the StreamReader constructor
-                using (StreamReader sr = new StreamReader(textPath))
+                using (StreamReader sr = new StreamReader(TextPath))
                 {
                     while ((buffer = sr.ReadLine()) != null)
                     {
@@ -91,14 +93,12 @@ namespace VKR.Models
                         Console.WriteLine("line:" + line);
                     }
                 }
-                tape = "          " + line;
-                letter = tape[10];
-
-                //Tape.Text = tape;
+                Tape = "                    " + line;
+                IsTaping = true;
             }
             catch (Exception e)
             {
-                tape = "          " + e.Message;
+                Tape = "                    " + e.Message;
             }
             finally
             {
@@ -111,29 +111,32 @@ namespace VKR.Models
             //clock start
             //при нажатии на кнопку сравниваемый символ перемещается к следующему
         }
-        public void tapeScroll()
+        public void tapeScroll()//при нажатии на кнопку сравниваемый символ перемещается к следующему
         {
-            tape = tape.Remove(0);
-            letter = tape[10];
-            //при нажатии на кнопку сравниваемый символ перемещается к следующему
+            if (Tape.Length > 21)
+            {
+                Tape = Tape.Remove(0, 1);
+            }
+            else
+            {
+                textTapeWait();
+            }    
         }
 
-        public void keyClick(object sender, KeyEventArgs e)
+        public void keyClick(object sender, TextCompositionEventArgs e)
         {
 
+            if (String.Equals(Tape[20].ToString(), e.Text.ToString()))
+            {
+                tapeScroll();
+            }
+            else
+            {
+
+            }
             //обработчик нажатия
             //start timer
-            tapeScroll();
         }
 
-        public void changeText()
-        {
-            //обработчик нажатия
-        }
-
-        private void textBox_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

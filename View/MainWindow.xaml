@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="ВКР" Height="640" Width="1100" MinHeight="640" MinWidth="1100" WindowStyle="ThreeDBorderWindow"
-        KeyDown="KeyDownEvents">
+        KeyDown="KeyEvents" KeyUp="KeyEvents" PreviewTextInput="TextInputEvent">
         
     <Grid x:Name="MainGrid" Background="#FFD861">
         <Border MinHeight="600" MinWidth="1050"  Margin="15" Padding="10" Background="#FFEBAF" VerticalAlignment="Center">
@@ -37,10 +37,13 @@
                         <TabItem Name="Lessons">
                             <TextBlock Text="Уроки"/>
                         </TabItem>
+                        <TabItem Name="Exercises">
+                            <TextBlock Text="Упражнения"/>
+                        </TabItem>
                     </TabControl>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5">
-                    <TextBlock  Text="{Binding Path=tape}" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="5" Cursor="AppStarting" FontSize="40" Margin="0,0,0,4" x:Name="Tape" TextAlignment="Right"/>
+                    <TextBlock  Text="" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="5" Cursor="AppStarting" FontSize="40" Margin="0,0,0,4" x:Name="Tape"/>
                 </StackPanel>
             </Grid>
         </Border>
