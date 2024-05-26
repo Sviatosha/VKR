@@ -76,8 +76,9 @@ namespace VKR.Models
             string line = "";
             try
             {
-                //Pass the file path and file name to the StreamReader constructor
-                using (StreamReader sr = new StreamReader(TextPath))
+                string currentPath = Directory.GetCurrentDirectory();
+                string filePath = System.IO.Path.Combine(currentPath, TextPath);
+                using (StreamReader sr = new StreamReader(filePath))
                 {
                     while ((buffer = sr.ReadLine()) != null)
                     {
