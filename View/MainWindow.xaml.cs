@@ -19,6 +19,7 @@ using static System.Net.WebRequestMethods;
 using System.Reflection.Emit;
 using VKR.Models;
 using System.Printing;
+using System.Windows.Threading;
 
 namespace VKR.View
 {
@@ -28,58 +29,111 @@ namespace VKR.View
 
     public partial class MainWindow : Window
     {
+        /*DispatcherTimer timer;*/
         public MainWindow()
         {
             TextTape tape = new TextTape();
-            tape.textTapeWait();
-            //this.DataContext = myTextTape[0];
-            InitializeComponent();
             myTextTape.Add(tape);
+            InitializeComponent();
+            myTextTape[0].textTapeWait();
+
 
             string textPath = @"Files\TextFiles\TestLesson.txt";
 
-            initiateTapeTest(textPath, tape);
+            initiateTape(textPath);
             Tape.Text = myTextTape[0].Tape;
 
+            timerStart();
         }
-    private static TextTapeSingleton myTextTape = TextTapeSingleton.GetInstance();
-    private void initiateTapeTest(string textPath,TextTape tape)
+        private static TextTapeSingleton myTextTape = TextTapeSingleton.GetInstance();
+        private DispatcherTimer timer = null;
+        private int seconds;
+        private void timerStart()
         {
-            string currentPath = Directory.GetCurrentDirectory();
-            string filePath = System.IO.Path.Combine(currentPath, textPath);
+            timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) }; // 1 секунда
+            timer.Tick += timerTick;
+            timer.Start();
+            timerForm();
+        }
+        private void timerEnd()
+        {
 
-            tape.initiateFileTape(filePath);
+            timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) }; // 1 секунда
+            timer.Tick += timerTick;
+            timer.Start();
+            timerForm();
         }
-        private void Wait(TextTape tape)
+        private void timerTick(object sender, EventArgs e)
         {
-            tape.textTapeWait();
+            seconds++;
+            timerForm();
+        }
+        private void timerForm()
+        {
+            var ts = TimeSpan.FromSeconds(seconds);
+
+            /* Timer.Text = $"{ts.Hours} ч. {ts.Minutes} м. {ts.Seconds} с.";*/
+
+            string timeInterval = "Время: "+ts.ToString();
+
+            Timer.Text = timeInterval;
+
+        }
+        private void initiateTape(string textPath)
+        {
+            myTextTape[0].initiateFileTape(textPath);
+            startLetters();
+        }
+        private void Wait()
+        {
+            myTextTape[0].textTapeWait();
         }
         private void KeyEvents(object sender, KeyEventArgs e)
         {
 
-
-            /*string s = "Event" + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
-            ProgramName.Text = s;*/
-
-           /* myTextTape[0].keyClick(sender, e);
-
-            Tape.Text = myTextTape[0].Tape;*/
-
-            /* if ((bool)chkIgnoreRepeat.IsChecked && e.IsRepeat) return;
-             i++;
-             string s = "Event" + i + ": " + e.RoutedEvent + " Клавиша: " + e.Key;
-             lbxEvents.Items.Add(s);*/
-
         }
+        private void startLetters()
+        {
+            string pressedLetter, letterToPress;
+            letterToPress = myTextTape[0].Tape[20].ToString();
 
+            if (letterToPress == " ")
+            {
+                letterToPress = "Пробел";
+            }
+
+            TapeNextLetters.Text = $"Следующая клавиша: {letterToPress}";
+            TapeInputLetters.Text = $" Нажатая клавиша: ";
+        }
         private void TextInputEvent(object sender, TextCompositionEventArgs e)
         {
+            if(myTextTape[0].Tape[20].ToString()!= e.Text)
+            {
+                TapeInputLetters.Foreground = Brushes.Red; 
 
+            }
+            else
+            {
+                TapeInputLetters.Foreground = Brushes.Black;
+            }
             myTextTape[0].keyClick(sender, e);
-            ProgramName.Text = myTextTape[0].IsTaping.ToString()+" "+ myTextTape[0].Tape[10] + " " +e.Text;
+
+            string pressedLetter, letterToPress;
+            letterToPress = myTextTape[0].Tape[20].ToString();
+            pressedLetter = e.Text;
+            if (pressedLetter==" ")
+            {
+                pressedLetter = "Пробел";
+            }
+            if (letterToPress == " ")
+            {
+                letterToPress = "Пробел";
+            }
+
+            TapeNextLetters.Text = $"Следующая клавиша: {letterToPress}";
+            TapeInputLetters.Text = $" Нажатая клавиша: {pressedLetter}";
 
             Tape.Text = myTextTape[0].Tape;
         }
-
     }
 }
