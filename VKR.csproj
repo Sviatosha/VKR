@@ -9,12 +9,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="TextFiles\" />
+    <Compile Remove="TextFiles\**" />
+    <EmbeddedResource Remove="TextFiles\**" />
+    <None Remove="TextFiles\**" />
+    <Page Remove="TextFiles\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="View\Клавиатура.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModel\" />
+    <Folder Include="src\Database\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
     <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\Клавиатура.png" />
   </ItemGroup>
 
 </Project>
