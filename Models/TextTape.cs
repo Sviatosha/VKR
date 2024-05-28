@@ -68,6 +68,52 @@ namespace VKR.Models
             Tape = "          " + " Enter-начать Bcsp-пауза cntl+Bcsp-Остановить";
             IsTaping = false;
         }
+
+        public void textTapePause()
+        {
+            
+        }
+        public void textTapeContinue()
+        {
+            
+        }
+
+        public void getExercise(string Path)
+        {
+
+            TextPath = Path;
+            string? buffer;
+            string? oldbuffer = "";
+            string line = "";
+            try
+            {
+                using (StreamReader sr = new StreamReader(Path))
+                {
+                    while ((buffer = sr.ReadLine()) != null)
+                    {
+                        buffer = buffer.Trim();
+                        while (oldbuffer != buffer)
+                        { //Удаление множественных пробелов
+                            oldbuffer = buffer;
+                            buffer = buffer?.Replace("  ", " ");
+                        }
+                        line += buffer + " ";
+                    }
+                }
+                line = line.Trim();
+                Tape = "          " + line;
+                IsTaping = true;
+            }
+            catch (Exception e)
+            {
+                Tape = "          " + e.Message;
+                IsTaping = true;
+            }
+            finally
+            {
+                Console.WriteLine("Executing finally block.");
+            }
+        }
         public void initiateFileTape(string Path)
         {
             TextPath = Path;
@@ -76,68 +122,59 @@ namespace VKR.Models
             string line = "";
             try
             {
-                string currentPath = Directory.GetCurrentDirectory();
-                string filePath = System.IO.Path.Combine(currentPath, TextPath);
-                using (StreamReader sr = new StreamReader(filePath))
+                using (StreamReader sr = new StreamReader(Path))
                 {
                     while ((buffer = sr.ReadLine()) != null)
                     {
-
                         buffer = buffer.Trim();
                         while (oldbuffer != buffer)
                         { //Удаление множественных пробелов
                             oldbuffer = buffer;
                             buffer = buffer?.Replace("  ", " ");
-                            Console.WriteLine("buffer:" + buffer);
                         }
                         line += buffer + " ";
-                        Console.WriteLine("line:" + line);
                     }
                 }
-                Tape = "                    " + line;
+                line = line.Trim();
+                Tape = "          " + line;
                 IsTaping = true;
             }
             catch (Exception e)
             {
-                Tape = "                    " + e.Message;
+                Tape = "          " + e.Message;
+                IsTaping = true;
             }
             finally
             {
                 Console.WriteLine("Executing finally block.");
             }
         }
-
-        public void clockStart()
-        {
-            //clock start
-            //при нажатии на кнопку сравниваемый символ перемещается к следующему
-        }
+        
         public void tapeScroll()//при нажатии на кнопку сравниваемый символ перемещается к следующему
         {
-            if (Tape.Length > 21)
+            if (Tape.Length > 11)
             {
                 Tape = Tape.Remove(0, 1);
             }
             else
             {
                 textTapeWait();
-            }    
+            }
         }
 
         public void keyClick(object sender, TextCompositionEventArgs e)
         {
-
-            if (String.Equals(Tape[20].ToString(), e.Text.ToString()))
+            if (IsTaping)
             {
-                tapeScroll();
-            }
-            else
-            {
+                if (String.Equals(Tape[10].ToString(), e.Text.ToString()))
+                {
+                    tapeScroll();
+                }
+                else
+                {
 
+                }
             }
-            //обработчик нажатия
-            //start timer
         }
-
     }
 }

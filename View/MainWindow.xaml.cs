@@ -20,6 +20,7 @@ using System.Reflection.Emit;
 using VKR.Models;
 using System.Printing;
 using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VKR.View
 {
@@ -35,33 +36,31 @@ namespace VKR.View
             TextTape tape = new TextTape();
             myTextTape.Add(tape);
             InitializeComponent();
-            myTextTape[0].textTapeWait();
+            initiateExercise();
+            Wait();
 
+            timerCreate();
 
-            string textPath = @"Files\TextFiles\TestLesson.txt";
-
-            initiateTape(textPath);
-            Tape.Text = myTextTape[0].Tape;
-
-            timerStart();
         }
         private static TextTapeSingleton myTextTape = TextTapeSingleton.GetInstance();
         private DispatcherTimer timer = null;
-        private int seconds;
-        private void timerStart()
+        private int seconds, clicks;
+
+        private void timerCreate()
         {
             timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) }; // 1 секунда
             timer.Tick += timerTick;
+            timerForm();
+        }
+        private void timerStart()
+        {
             timer.Start();
             timerForm();
         }
         private void timerEnd()
         {
-
-            timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) }; // 1 секунда
-            timer.Tick += timerTick;
-            timer.Start();
-            timerForm();
+            timer.Stop();
+            seconds = 0;
         }
         private void timerTick(object sender, EventArgs e)
         {
@@ -74,19 +73,16 @@ namespace VKR.View
 
             /* Timer.Text = $"{ts.Hours} ч. {ts.Minutes} м. {ts.Seconds} с.";*/
 
-            string timeInterval = "Время: "+ts.ToString();
+            string timeInterval = ts.ToString();
 
             Timer.Text = timeInterval;
 
         }
-        private void initiateTape(string textPath)
-        {
-            myTextTape[0].initiateFileTape(textPath);
-            startLetters();
-        }
-        private void Wait()
+        
+        private void Wait()//Экран ожидания
         {
             myTextTape[0].textTapeWait();
+            Tape.Text = myTextTape[0].Tape;
         }
         private void KeyEvents(object sender, KeyEventArgs e)
         {
@@ -95,7 +91,7 @@ namespace VKR.View
         private void startLetters()
         {
             string pressedLetter, letterToPress;
-            letterToPress = myTextTape[0].Tape[20].ToString();
+            letterToPress = myTextTape[0].Tape[10].ToString();
 
             if (letterToPress == " ")
             {
@@ -107,9 +103,9 @@ namespace VKR.View
         }
         private void TextInputEvent(object sender, TextCompositionEventArgs e)
         {
-            if(myTextTape[0].Tape[20].ToString()!= e.Text)
+            if (myTextTape[0].Tape[10].ToString() != e.Text)
             {
-                TapeInputLetters.Foreground = Brushes.Red; 
+                TapeInputLetters.Foreground = Brushes.Red;
 
             }
             else
@@ -119,9 +115,9 @@ namespace VKR.View
             myTextTape[0].keyClick(sender, e);
 
             string pressedLetter, letterToPress;
-            letterToPress = myTextTape[0].Tape[20].ToString();
+            letterToPress = myTextTape[0].Tape[10].ToString();
             pressedLetter = e.Text;
-            if (pressedLetter==" ")
+            if (pressedLetter == " ")
             {
                 pressedLetter = "Пробел";
             }
@@ -134,6 +130,86 @@ namespace VKR.View
             TapeInputLetters.Text = $" Нажатая клавиша: {pressedLetter}";
 
             Tape.Text = myTextTape[0].Tape;
+            clicks++;
+            changeVision();
+        }
+
+        private void changeVision()
+        {
+            if (myTextTape[0].IsTaping == true)
+            {
+                TapeNextLetters.Visibility = Visibility.Visible;
+                TapeInputLetters.Visibility = Visibility.Visible;
+                timerStart();
+            }
+            else if (myTextTape[0].IsTaping == false)
+            {
+                TapeNextLetters.Visibility = Visibility.Hidden;
+                TapeInputLetters.Visibility = Visibility.Hidden;
+                timerEnd();
+            }
+        }
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = (MenuItem)sender;
+            if (menuItem.Header.ToString() == "Свой текст")
+            {
+                loadFile();
+            }
+            else if (menuItem.Header.ToString() == "Упражнения")
+            {
+                
+            }
+            else
+            {
+                getExercise(menuItem.Header.ToString());
+            }
+        }
+        private void loadFile()
+        {
+
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = "Document"; // Default file name
+            dlg.DefaultExt = ".txt"; // Default file extension
+            dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
+
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results
+            if (result == true)
+            {
+                // Open document
+                string filename = dlg.FileName;
+                initiateTape(filename);
+
+            }
+        }
+        private void initiateTape(string textPath)
+        {
+            myTextTape[0].initiateFileTape(textPath);
+            Tape.Text = myTextTape[0].Tape;
+            startLetters();
+            timerStart();
+        }
+        private void initiateExercise()//WIP
+        {
+            string[] allfiles = Directory.GetFiles(@"..\..\..\src\Exercises");
+            foreach (string filename in allfiles)
+            {
+                MenuItem exerc = new MenuItem();
+                exerc.Header = filename;
+                exerc.Click += MenuItem_Click;
+                ExerciseMenu.Items.Add(exerc);
+            }
+            
+        }
+        private void getExercise(string Path)
+        {
+            myTextTape[0].getExercise(Path);
+            Tape.Text = myTextTape[0].Tape;
+            startLetters();
+            timerStart();
         }
     }
 }
