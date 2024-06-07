@@ -1,0 +1,25 @@
+﻿<Window x:Class="VKR.View.Help.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VKR.View.Help"
+        mc:Ignorable="d"
+        Title="HelpWindow" Height="550" Width="568">
+    <Grid x:Name="MainGrid" Background="#FFD861">
+        <Border Margin="10,10,10,10" Padding="10,10,10,10" Background="#FFEBAF" >
+            <StackPanel VerticalAlignment="Center">
+                <Border Height="60" Width="508" >
+                    <Border.Background>
+                        <ImageBrush ImageSource="/View/Help/help.png"/>
+                    </Border.Background>
+
+                </Border>
+                <TextBlock Margin="10,10,10,10" Padding="10,10,10,10" Text="В меню 'Занятия' можно изучить теорию, пройти упражнения, попробовать себя в тренажёрах, а если этого мало,то загрузить свой текст и поупрожняться в его наборе и посмотреть каких успехов вы достигли" Background="#FFF9EED0" FontSize="20" TextWrapping="Wrap"/>
+                <TextBlock Margin="10,10,10,10" Padding="10,10,10,10" Text="В меню 'Опции' можно настроить программу под себя" Background="#FFF9EED0" FontSize="20" TextWrapping="Wrap"/>
+                <TextBlock Margin="10,10,10,10" Padding="10,10,10,10" Text="В меню 'Помощь' вы сейчас находитесь" Background="#FFF9EED0" FontSize="20" TextWrapping="Wrap"/>
+                <TextBlock Margin="10,10,10,10" Padding="10,10,10,10" Text="В меню 'О программе' можно больше узнать о самой программе" Background="#FFF9EED0" FontSize="20" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

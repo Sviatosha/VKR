@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VKR.View"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="ВКР" Height="612" Width="1050" MinHeight="640" MinWidth="1100" WindowStyle="ThreeDBorderWindow"
+        Title="ВКР" Height="612" Width="1450" MinHeight="640" MinWidth="1400" WindowStyle="ThreeDBorderWindow"
         KeyDown="KeyEvents" KeyUp="KeyEvents" PreviewTextInput="TextInputEvent">
 
 
@@ -33,12 +33,12 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">
-                    <TextBlock Text="" Height="33" Width="214" Margin="0,0,5,5" FontSize="25" x:Name="Timer" TextAlignment="Center" HorizontalAlignment="Right" Cursor="" />
+                    <TextBlock Text="" Height="40" Width="150" Margin="0,0,5,5" FontSize="25" x:Name="Timer" TextAlignment="Center" HorizontalAlignment="Right" Cursor="" Background="#FFF9EED0" />
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="3" Cursor="AppStarting" FontSize="20" Margin="5,0,0,5" x:Name="TapeNextLetters" Width="275"/>
-                        <TextBlock Text="" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="3" Cursor="AppStarting" FontSize="20" Margin="5,0,0,5" x:Name="TapeInputLetters" Width="275"/>
+                        <TextBlock Text="" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="3" Cursor="AppStarting" FontSize="20" Margin="5,0,0,5" x:Name="TapeNextLetters" Width="275" />
+                        <TextBlock Text="" Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="3" Cursor="AppStarting" FontSize="20" Margin="5,0,0,5" x:Name="TapeInputLetters" Width="275" />
                     </StackPanel>
                     <Grid>
                         <Border BorderThickness="0.5" BorderBrush="Black" Height="60">
@@ -46,40 +46,49 @@
                             </TextBlock>
                         </Border>
                         <TextBlock HorizontalAlignment="Left" Width="240" Height="60" Background="Black" Opacity="0.5" Panel.ZIndex="1" OpacityMask="Black" >
-                            
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black"/>
+                                    <GradientStop Color="White" Offset="0.807"/>
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+
                         </TextBlock>
                     </Grid>
 
                 </StackPanel>
-                <StackPanel Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image />
-                    <Border Width="573" Height="266" >
-                        <Border.Background>
-                            <ImageBrush Stretch="Fill" TileMode="None" ImageSource="/View/Клавиатура.png"/>
-                        </Border.Background>
-                    </Border>
+                <StackPanel Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="keyboard">
+                    <Grid x:Name="Keyboardgrid"></Grid>
                 </StackPanel>
             </Grid>
         </Border>
         <Menu Height="40" VerticalAlignment="Top">
             <MenuItem Header="Занятия">
-                <MenuItem Header="Теория" ></MenuItem>
+                <MenuItem Header="Теория">
+                    <MenuItem Header="Что такое метод слепой печати" Click="Lessons_Click"></MenuItem>
+                    <MenuItem Header="Перед печатью" Click="Lessons_Click"></MenuItem>
+                    <MenuItem Header="Метод десятепальцевой слепой печати" Click="Lessons_Click"></MenuItem>
+                    <MenuItem Header="Для людей с ограниченными возможностями" Click="Lessons_Click"></MenuItem>
+                </MenuItem>
                 <MenuItem Header="Практика" >
-                    <MenuItem Header="Уроки"></MenuItem>
                     <MenuItem Header="Упражнения" x:Name="ExerciseMenu"></MenuItem>
-                    <MenuItem Header="Работа над ошибками" ></MenuItem>
-                    <MenuItem Header="Свободная печать" ></MenuItem>
+                    <MenuItem Header="Работа над ошибками" Click="MenuItem_Click"></MenuItem>
                     <MenuItem Header="Свой текст" Click="MenuItem_Click"> </MenuItem>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Exit" ></MenuItem>
+                <Label Content="Тренажёры"></Label>
+                <RadioButton GroupName="Trainers" Content="без" Checked="Trainer_Checked" IsChecked="True" />
+                <RadioButton GroupName="Trainers" Content="На скорость" Checked="Trainer_Checked" />
+                <RadioButton GroupName="Trainers" Content="На выносливость" Checked="Trainer_Checked" />
+                <RadioButton GroupName="Trainers" Content="На точность" Checked="Trainer_Checked" />
+                <Separator />
+                <MenuItem Header="Статистика" Click="MenuItem_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Опции" >
-                <MenuItem Header="Статистика" ></MenuItem>
-                <MenuItem Header="Настройки" ></MenuItem>
+                <MenuItem Header="Настройки" Click="MenuItem_Click"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Помощь" ></MenuItem>
-            <MenuItem Header="О программе" ></MenuItem>
+            <MenuItem Header="Помощь" Click="MenuItem_Click"></MenuItem>
+            <MenuItem Header="О программе" Click="MenuItem_Click"></MenuItem>
         </Menu>
     </Grid>
 </Window>
