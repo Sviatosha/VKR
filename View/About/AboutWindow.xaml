@@ -1,0 +1,16 @@
+﻿<Window x:Class="VKR.View.About.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VKR.View.About"
+        mc:Ignorable="d"
+        Title="AboutWindow" Height="275" Width="300" MinHeight="275" MaxHeight="275" MinWidth="300" MaxWidth="300">
+    <Grid x:Name="MainGrid" Background="#FFD861">
+        <Border   Margin="10,10,10,10" Padding="10,10,10,10" Background="#FFEBAF">
+
+            <TextBlock Text="Данное приложение является тренажёром для обучения десятипальцевому методу слепой печати, разработанное в рамках ВКР" FontSize="22" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Background="#FFF9EED0"/>
+            
+        </Border>
+    </Grid>
+</Window>
