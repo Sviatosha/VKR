@@ -24,7 +24,6 @@ namespace VKR.View.Lessons
         {
             InitializeComponent();
             
-            LessonSelector.SelectedIndex = 0;
         }
 
     }

@@ -11,6 +11,9 @@ using WMPLib;
 using VKR.View.Lessons;
 using VKR.View.About;
 using VKR.View.Help;
+using System.Collections.Generic;
+using VKR.src.Database;
+using System.Windows.Documents;
 
 namespace VKR.View
 {
@@ -33,13 +36,10 @@ namespace VKR.View
         }
         private static TextTapeSingleton myTextTape = TextTapeSingleton.GetInstance();//singleton
         private DispatcherTimer timer = null;// Обьявление таймера
-        private int seconds, clicks;//секунды и нажатия
-
-        /*
-         * Обработка открытия новых окон
-         */
-
-        
+        private int seconds, clicks, errors,cps;//секунды и нажатия
+        private List<String> Errors;
+        private List<int> ClicksPerSecond;
+        private string type="bsc";
         /*
         * Обработка таймера
         */
@@ -62,24 +62,20 @@ namespace VKR.View
 
         private void timerBackwards() // WIP Запуск таймера обратного отчёта
         {
-            timer.Stop();
-            seconds = 0;
+           
         }
         private void timerTick(object sender, EventArgs e) // Обработка изменения времени в таймере
         {
             seconds++;
+            ClicksPerSecond.Add(cps);
+            cps = 0;
             timerForm();
         }
         private void timerForm() // Обработка изменения времени в таймере
         {
             var ts = TimeSpan.FromSeconds(seconds);
-
-            /* Timer.Text = $"{ts.Hours} ч. {ts.Minutes} м. {ts.Seconds} с.";*/
-
             string timeInterval = ts.ToString();
-
             Timer.Text = timeInterval;
-
         }
 
         /*
@@ -95,24 +91,30 @@ namespace VKR.View
             {
                 letterToPress = "Пробел";
             }
-
             TapeNextLetters.Text = $"Следующая клавиша: {letterToPress}";
             TapeInputLetters.Text = $" Нажатая клавиша: ";
         }
 
         private void changeVision()// Видимость нажатой и следующей буквы
         {
-            if (myTextTape[0].IsTaping == true)
+            if (myTextTape[0].State == "Taping")
             {
                 TapeNextLetters.Visibility = Visibility.Visible;
                 TapeInputLetters.Visibility = Visibility.Visible;
                 timerStart();
             }
-            else if (myTextTape[0].IsTaping == false)
+            else if (myTextTape[0].State == "Wait")
             {
-                TapeNextLetters.Visibility = Visibility.Hidden;
-                TapeInputLetters.Visibility = Visibility.Hidden;
+                TapeNextLetters.Visibility = Visibility.Collapsed;
+                TapeInputLetters.Visibility = Visibility.Collapsed;
+            }
+            else if (myTextTape[0].State == "End")
+            {
+                myTextTape[0].State = "Wait";
+                TapeNextLetters.Visibility = Visibility.Collapsed;
+                TapeInputLetters.Visibility = Visibility.Collapsed;
                 timerEnd();
+                ExerciseEnd();
             }
         }
         private void Wait() //Экран ожидания
@@ -120,15 +122,22 @@ namespace VKR.View
             myTextTape[0].textTapeWait();
             Tape.Text = myTextTape[0].Tape;
         }
+
         private void TextInputEvent(object sender, TextCompositionEventArgs e) //обработка нажатия для текстовой ленты
         {
+
+            clicks++;
+            cps++;
             if (myTextTape[0].Tape[10].ToString() != e.Text)
             {
+                errors++;
+                Errors.Add(e.Text);
                 TapeInputLetters.Foreground = Brushes.Red;
             }
             else
             {
                 TapeInputLetters.Foreground = Brushes.Black;
+
             }
             myTextTape[0].keyClick(sender, e);
 
@@ -148,13 +157,13 @@ namespace VKR.View
             TapeInputLetters.Text = $" Нажатая клавиша: {pressedLetter}";
 
             Tape.Text = myTextTape[0].Tape;
-            clicks++;
             changeVision();
             soundPlay();
         }
 
         private void loadFile() //загрузка своего файла
         {
+            type = "free";
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = "Document"; // Default file name
             dlg.DefaultExt = ".txt"; // Default file extension
@@ -179,13 +188,33 @@ namespace VKR.View
             timerStart();
         }
 
+        private void ErrorWork()
+        {
+            myTextTape[0].initiateWorkOnErrors();
+        }
+
         /*
         * Обработка переключателей и меню
         */
         private void Trainer_Checked(object sender, RoutedEventArgs e) // тренажёры
         {
             RadioButton pressed = (RadioButton)sender;
-            //MessageBox.Show(pressed.Content.ToString());
+            if (pressed.Content.ToString() == "без")
+            {
+                type = "bsc";
+            }
+            if (pressed.Content.ToString() == "На скорость")
+            {
+                type = "speed";
+            }
+            if (pressed.Content.ToString() == "На выносливость")
+            {
+                type = "end";
+            }
+            if (pressed.Content.ToString() == "На точность")
+            {
+                type = "acc";
+            }
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) // Меню WIP
@@ -198,7 +227,7 @@ namespace VKR.View
             }
             else if (menuItem.Header.ToString() == "Работа над ошибками")
             {
-                //ErrorWork();
+                ErrorWork();
             }
             else if (menuItem.Header.ToString() == "Статистика")
             {
@@ -315,6 +344,47 @@ namespace VKR.View
             }
         }
 
+        private void ExerciseEnd()
+        {
+            using (StatisticContext db = new StatisticContext())
+            {
+
+                Statistic statistic = new Statistic
+                { 
+                    Date = DateTime.Now, 
+                    type = this.type, 
+                    seconds = this.seconds,
+                    errors = this.errors,
+                    letters_count = clicks, 
+                    clicks_in_second = ClicksPerSecond
+                };
+                db.Statistics.Add(statistic);
+                db.SaveChanges();
+            }
+            using (ErrorContext db = new ErrorContext())
+            {
+                foreach (var err in Errors)
+                {
+                    Error e = new Error
+                    {
+                        error=err
+                    };
+                    db.Errors.Add(e);
+                }
+                db.SaveChanges();
+            }
+            counterNull();
+        }
+        private void counterNull()
+        {
+            rbNone.IsChecked = true;
+            seconds = 0;
+            seconds = 0; clicks = 0; errors = 0; cps = 0;
+
+            Errors.Clear();
+            ClicksPerSecond.Clear();
+        }
+        
         /*
         * Обработка клавиатуры
         */
@@ -333,5 +403,7 @@ namespace VKR.View
             wmp.URL = fullPath;
             wmp.controls.play();
         }
+
+
     }
 }
