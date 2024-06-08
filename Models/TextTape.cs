@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Collections;
+using VKR.src.Database;
 
 namespace VKR.Models
 {
@@ -19,7 +20,7 @@ namespace VKR.Models
     {
         private string textPath { get; set; }
         private string tape { get; set; }
-        private bool isTaping { get; set; }
+        private string state { get; set; }
 
         public string TextPath
         {
@@ -39,13 +40,13 @@ namespace VKR.Models
                 OnPropertyChanged("Tape");
             }
         }
-        public bool IsTaping
+        public string State
         {
-            get { return isTaping; }
+            get { return state; }
             set
             {
-                isTaping = value;
-                OnPropertyChanged("isTaping");
+                state = value;
+                OnPropertyChanged("State");
             }
         }
 
@@ -60,27 +61,26 @@ namespace VKR.Models
         {
             TextPath = "";
             this.Tape = "";
-            IsTaping = false;
+            State = "Created";
             //классы обьявить
         }
         public void textTapeWait()
         {
             Tape = "          " + " Enter-начать Bcsp-пауза cntl+Bcsp-Остановить";
-            IsTaping = false;
+            State = "Wait";
         }
 
         public void textTapePause()
         {
-            
+            State = "Paused";
         }
         public void textTapeContinue()
         {
-            
+            State = "Taping";
         }
 
         public void getExercise(string Path)
         {
-
             TextPath = Path;
             string? buffer;
             string? oldbuffer = "";
@@ -102,12 +102,12 @@ namespace VKR.Models
                 }
                 line = line.Trim();
                 Tape = "          " + line;
-                IsTaping = true;
+                State = "Taping";
             }
             catch (Exception e)
             {
                 Tape = "          " + e.Message;
-                IsTaping = true;
+                State = "Taping";
             }
             finally
             {
@@ -137,20 +137,48 @@ namespace VKR.Models
                 }
                 line = line.Trim();
                 Tape = "          " + line;
-                IsTaping = true;
+                State = "Taping";
             }
             catch (Exception e)
             {
                 Tape = "          " + e.Message;
-                IsTaping = true;
+                State = "Taping";
             }
             finally
             {
                 Console.WriteLine("Executing finally block.");
             }
         }
-        
-        public void tapeScroll()//при нажатии на кнопку сравниваемый символ перемещается к следующему
+
+        public void initiateWorkOnErrors()//WIP
+        {
+            string line = "";
+            using (ErrorContext db = new ErrorContext())
+            {
+
+                var err = db.Errors.ToList();
+
+                if (err.Count > 0)
+                {
+                    Console.WriteLine("Список объектов:");
+                    foreach (Error e in err)
+                    {
+                        line += e + " ";
+                    }
+                    line = line.Trim();
+                    Tape = "          " + line;
+                    State = "Taping";
+                    //очистить бд
+                }
+                else
+                {
+                    Tape = "          " + "Пусто, ошибок нет!";
+                    State = "Taping";
+                }
+            }
+        }
+
+            public void tapeScroll()//при нажатии на кнопку сравниваемый символ перемещается к следующему
         {
             if (Tape.Length > 11)
             {
@@ -158,13 +186,19 @@ namespace VKR.Models
             }
             else
             {
-                textTapeWait();
+                exerciseEnd();
             }
+        }
+
+        public void exerciseEnd()
+        {
+            textTapeWait();
+            State = "End";
         }
 
         public void keyClick(object sender, TextCompositionEventArgs e)
         {
-            if (IsTaping)
+            if (State == "Taping")
             {
                 if (String.Equals(Tape[10].ToString(), e.Text.ToString()))
                 {

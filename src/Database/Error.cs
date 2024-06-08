@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VKR.Models
+namespace VKR.src.Database
 {
-    class Statistic
+    internal class Error
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int Age { get; set; }
+        public string error { get; set; }
     }
 }

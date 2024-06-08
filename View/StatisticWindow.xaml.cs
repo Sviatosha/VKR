@@ -16,6 +16,7 @@ using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using LiveCharts.Wpf.Charts.Base;
+using VKR.src.Database;
 
 namespace VKR.View
 {
@@ -40,6 +41,34 @@ namespace VKR.View
         private void UpdateOnclick(object sender, RoutedEventArgs e)
         {
             Chart.Update(true);
+        }
+
+        private void InitiateStatistic()
+        {
+            using (StatisticContext db = new StatisticContext())
+            {
+                // создаем два объекта User
+                Statistic statistic = new Statistic
+                {
+                    Date = DateTime.Now,
+                    type = this.type,
+                    seconds = this.seconds,
+                    errors = this.errors,
+                    letters_count = clicks,
+                    clicks_in_second = ClicksPerSecond
+                };
+                db.Statistics.Add(statistic);
+                db.SaveChanges();
+
+
+                // получаем объекты из бд и выводим на консоль
+                var statistic = db.Statistics.ToList();
+                Console.WriteLine("Список объектов:");
+                foreach (stat u in statistic)
+                {
+                    Console.WriteLine($"{u.Id}.{u.Name} - {u.Age}");
+                }
+            }
         }
     }
 }

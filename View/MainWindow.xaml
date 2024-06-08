@@ -77,10 +77,10 @@
                 </MenuItem>
                 <Separator />
                 <Label Content="Тренажёры"></Label>
-                <RadioButton GroupName="Trainers" Content="без" Checked="Trainer_Checked" IsChecked="True" />
-                <RadioButton GroupName="Trainers" Content="На скорость" Checked="Trainer_Checked" />
-                <RadioButton GroupName="Trainers" Content="На выносливость" Checked="Trainer_Checked" />
-                <RadioButton GroupName="Trainers" Content="На точность" Checked="Trainer_Checked" />
+                <RadioButton x:Name="rbNone" GroupName="Trainers" Content="без" Checked="Trainer_Checked" IsChecked="True" />
+                <RadioButton x:Name="rbSpeed" GroupName="Trainers" Content="На скорость" Checked="Trainer_Checked" />
+                <RadioButton x:Name="rbEndurance" GroupName="Trainers" Content="На выносливость" Checked="Trainer_Checked" />
+                <RadioButton x:Name="rbAccuracy" GroupName="Trainers" Content="На точность" Checked="Trainer_Checked" />
                 <Separator />
                 <MenuItem Header="Статистика" Click="MenuItem_Click"></MenuItem>
             </MenuItem>
