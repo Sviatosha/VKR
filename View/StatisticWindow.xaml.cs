@@ -30,13 +30,19 @@ namespace VKR.View
         public StatisticWindow()
         {
             InitializeComponent();
+            Values = new ChartValues<double> { };
+            Date = new DateTime();
 
-            Values = new ChartValues<double> { 78, 85, 89,80, 96, 79 };
+
+            InitiateStatistic();
+
+
 
             DataContext = this;
         }
 
         public ChartValues<double> Values { get; set; }
+        public DateTime Date { get; set; }
 
         private void UpdateOnclick(object sender, RoutedEventArgs e)
         {
@@ -45,28 +51,31 @@ namespace VKR.View
 
         private void InitiateStatistic()
         {
+            Values.Clear();
             using (StatisticContext db = new StatisticContext())
             {
-                // создаем два объекта User
-                Statistic statistic = new Statistic
-                {
-                    Date = DateTime.Now,
-                    type = this.type,
-                    seconds = this.seconds,
-                    errors = this.errors,
-                    letters_count = clicks,
-                    clicks_in_second = ClicksPerSecond
-                };
-                db.Statistics.Add(statistic);
-                db.SaveChanges();
-
-
                 // получаем объекты из бд и выводим на консоль
+                var statistic = db.Statistics.OrderBy(e => e.Id).LastOrDefault();
+                var list=statistic.clicksInSecond.ToList();
+                foreach (var item in list)
+                {
+                    Values.Add(item);
+                }
+                Date=statistic.Date;
+                TableType.Text = "Нажатия в секунду";
+            }
+        }
+        private void allStatistic()
+        {
+            using (StatisticContext db = new StatisticContext())
+            {
+                // получаем объекты из бд и выводим на консоль
+                db.Statistics.LastOrDefault();
                 var statistic = db.Statistics.ToList();
                 Console.WriteLine("Список объектов:");
-                foreach (stat u in statistic)
+                foreach (Statistic s in statistic)
                 {
-                    Console.WriteLine($"{u.Id}.{u.Name} - {u.Age}");
+                    Console.WriteLine($"{s.type} - {s.seconds}");
                 }
             }
         }

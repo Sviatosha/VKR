@@ -36,9 +36,9 @@ namespace VKR.View
         }
         private static TextTapeSingleton myTextTape = TextTapeSingleton.GetInstance();//singleton
         private DispatcherTimer timer = null;// Обьявление таймера
-        private int seconds, clicks, errors,cps;//секунды и нажатия
-        private List<String> Errors;
-        private List<int> ClicksPerSecond;
+        private int seconds=0, clicks=0, errors=0,cps=0;//секунды и нажатия
+        private List<string> Errors = new List<string>();
+        private List<int> ClicksPerSecond = new List<int>();
         private string type="bsc";
         /*
         * Обработка таймера
@@ -113,8 +113,8 @@ namespace VKR.View
                 myTextTape[0].State = "Wait";
                 TapeNextLetters.Visibility = Visibility.Collapsed;
                 TapeInputLetters.Visibility = Visibility.Collapsed;
-                timerEnd();
                 ExerciseEnd();
+                timerEnd();
             }
         }
         private void Wait() //Экран ожидания
@@ -191,6 +191,10 @@ namespace VKR.View
         private void ErrorWork()
         {
             myTextTape[0].initiateWorkOnErrors();
+            Tape.Text = myTextTape[0].Tape;
+            startLetters();
+            changeVision();
+            timerStart();
         }
 
         /*
@@ -201,18 +205,26 @@ namespace VKR.View
             RadioButton pressed = (RadioButton)sender;
             if (pressed.Content.ToString() == "без")
             {
+                TrainerSelected.Text = "";
+                TrainerSelected.Visibility = Visibility.Hidden;
                 type = "bsc";
             }
             if (pressed.Content.ToString() == "На скорость")
             {
+                TrainerSelected.Text = "Тренажёр: "+ pressed.Content.ToString();
+                TrainerSelected.Visibility = Visibility.Visible;
                 type = "speed";
             }
             if (pressed.Content.ToString() == "На выносливость")
             {
+                TrainerSelected.Text = "Тренажёр: " + pressed.Content.ToString();
+                TrainerSelected.Visibility = Visibility.Visible;
                 type = "end";
             }
             if (pressed.Content.ToString() == "На точность")
             {
+                TrainerSelected.Text = "Тренажёр: " + pressed.Content.ToString();
+                TrainerSelected.Visibility = Visibility.Visible;
                 type = "acc";
             }
         }
@@ -221,7 +233,7 @@ namespace VKR.View
         {
             MenuItem menuItem = (MenuItem)sender;
 
-            if (menuItem.Header.ToString() == "Свой текст")
+            if (menuItem.Header.ToString() == "Свободная печать")
             {
                 loadFile();
             }
@@ -231,8 +243,7 @@ namespace VKR.View
             }
             else if (menuItem.Header.ToString() == "Статистика")
             {
-                StatisticWindow statisticWindow = new StatisticWindow();
-                statisticWindow.Show();
+                StatisticOpen();
             }
             else if (menuItem.Header.ToString() == "Настройки")
             {
@@ -249,6 +260,12 @@ namespace VKR.View
                 AboutWindow aboutWindow = new AboutWindow();
                 aboutWindow.Show();
             }
+        }
+
+        private void StatisticOpen()
+        {
+            StatisticWindow statisticWindow = new StatisticWindow();
+            statisticWindow.Show();
         }
         
         private void Lessons_Click(object sender, RoutedEventArgs e) // Меню WIP
@@ -355,8 +372,8 @@ namespace VKR.View
                     type = this.type, 
                     seconds = this.seconds,
                     errors = this.errors,
-                    letters_count = clicks, 
-                    clicks_in_second = ClicksPerSecond
+                    letters_count = clicks,
+                    clicksInSecond = ClicksPerSecond.ToArray()
                 };
                 db.Statistics.Add(statistic);
                 db.SaveChanges();
@@ -374,6 +391,7 @@ namespace VKR.View
                 db.SaveChanges();
             }
             counterNull();
+            StatisticOpen();
         }
         private void counterNull()
         {
@@ -386,10 +404,11 @@ namespace VKR.View
         }
         
         /*
-        * Обработка клавиатуры
+        * Обработка клавиатуры и нажатий
         */
         private void KeyEvents(object sender, KeyEventArgs e)
         {
+
 
         }
         /*
