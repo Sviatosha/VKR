@@ -32,6 +32,9 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" >
+                    <TextBlock Text="" Height="40" Margin="0,0,5,5" FontSize="25" x:Name="TrainerSelected" TextAlignment="Left" Cursor=""  />
+                </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">
                     <TextBlock Text="" Height="40" Width="150" Margin="0,0,5,5" FontSize="25" x:Name="Timer" TextAlignment="Center" HorizontalAlignment="Right" Cursor="" Background="#FFF9EED0" />
                 </StackPanel>
@@ -73,7 +76,7 @@
                 <MenuItem Header="Практика" >
                     <MenuItem Header="Упражнения" x:Name="ExerciseMenu"></MenuItem>
                     <MenuItem Header="Работа над ошибками" Click="MenuItem_Click"></MenuItem>
-                    <MenuItem Header="Свой текст" Click="MenuItem_Click"> </MenuItem>
+                    <MenuItem Header="Свободная печать" Click="MenuItem_Click"> </MenuItem>
                 </MenuItem>
                 <Separator />
                 <Label Content="Тренажёры"></Label>

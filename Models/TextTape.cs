@@ -66,7 +66,7 @@ namespace VKR.Models
         }
         public void textTapeWait()
         {
-            Tape = "          " + " Enter-начать Bcsp-пауза cntl+Bcsp-Остановить";
+            Tape = "          " + " Bcsp-пауза cntl+Bcsp-Остановить";
             State = "Wait";
         }
 
@@ -160,15 +160,16 @@ namespace VKR.Models
 
                 if (err.Count > 0)
                 {
-                    Console.WriteLine("Список объектов:");
                     foreach (Error e in err)
                     {
-                        line += e + " ";
+                        line += e.error + " ";
                     }
                     line = line.Trim();
                     Tape = "          " + line;
                     State = "Taping";
                     //очистить бд
+                    db.Errors.RemoveRange(db.Errors.OrderBy(e => e.Id).FirstOrDefault(), db.Errors.OrderBy(e => e.Id).LastOrDefault());
+                    db.SaveChanges();
                 }
                 else
                 {
