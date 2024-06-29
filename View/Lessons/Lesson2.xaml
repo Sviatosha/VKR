@@ -1,0 +1,39 @@
+﻿<Window x:Class="VKR.View.Lessons.Lesson2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VKR.View.Lessons"
+        mc:Ignorable="d"
+        Title="Lesson2" Height="710" Width="800">
+    <Grid x:Name="MainGrid" Background="#FFD861">
+        <StackPanel >
+            <Border   Margin="10,10,10,10" Padding="10,10,10,10" Background="#FFEBAF" VerticalAlignment="Top">
+                <TextBlock Text="Перед печатью" HorizontalAlignment="Center" FontSize="20"></TextBlock>
+            </Border>
+
+            <Border Margin="10,10,10,10" Padding="10,10,10,10" Background="#FFEBAF" BorderBrush="Black" >
+                <StackPanel>
+
+                    <TextBlock  FontSize="20" TextWrapping="Wrap" Margin="0,0,0,5" TextAlignment="Justify">
+                    Эргономичная здоровая посадка – базовый элемент слепой печати. Без этого будет трудно начать учиться. Во-первых, неправильная поза неудобна и печать из неё будет вызывать дискомфорт. А, во-вторых, если с самого начала обучения сидеть правильно, то потом при возникновении сложностей не придётся переучиваться.
+                    </TextBlock>
+
+
+                    <TextBlock  FontSize="20" TextWrapping="Wrap" Margin="0,0,0,5" TextAlignment="Justify">
+                    	Правильная поза такова, спина прямая под углом в 90 градусов, взгляд направлен вперёд в центр экрана, Расстояние до экрана монитора примерно равно длине руки. Правильная поза очень важна для здоровья и способствует быстрому обучению печати слепым методом.
+                    </TextBlock>
+
+
+                    <Border Height="329">
+                        <Border.Background>
+                            <ImageBrush ImageSource="/View/Lessons/Seat.png"/>
+                        </Border.Background>
+
+                    </Border>
+                    
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>

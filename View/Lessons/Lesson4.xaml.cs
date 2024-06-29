@@ -3,14 +3,13 @@
 namespace VKR.View.Lessons
 {
     /// <summary>
-    /// Логика взаимодействия для LessonsBook.xaml
+    /// Логика взаимодействия для Lesson4.xaml
     /// </summary>
-    public partial class LessonsBook : Window
+    public partial class Lesson4 : Window
     {
-        public LessonsBook()
+        public Lesson4()
         {
             InitializeComponent();
-
         }
     }
 }

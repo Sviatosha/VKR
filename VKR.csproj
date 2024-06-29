@@ -17,6 +17,9 @@
 
   <ItemGroup>
     <None Remove="View\Help\help.png" />
+    <None Remove="View\Lessons\L4 image.jpg" />
+    <None Remove="View\Lessons\Seat.png" />
+    <None Remove="View\Lessons\Клавиатура.png" />
     <None Remove="View\Клавиатура.png" />
   </ItemGroup>
 
@@ -78,6 +81,9 @@
 
   <ItemGroup>
     <Resource Include="View\Help\help.png" />
+    <Resource Include="View\Lessons\L4 image.jpg" />
+    <Resource Include="View\Lessons\Seat.png" />
+    <Resource Include="View\Lessons\Клавиатура.png" />
     <Resource Include="View\Клавиатура.png" />
   </ItemGroup>
 

@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Windows.Shapes;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Reflection.Emit;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.Collections;
+using System.Windows.Input;
 using VKR.src.Database;
 
 namespace VKR.Models
@@ -66,17 +58,16 @@ namespace VKR.Models
         }
         public void textTapeWait()
         {
-            Tape = "          " + " Bcsp-пауза cntl+Bcsp-Остановить";
+            Tape = "          " + " Bcsp-прервать ctrl+F1-Остановить ctrl+F2-Продолжить";
             State = "Wait";
         }
-
         public void textTapePause()
         {
             State = "Paused";
         }
         public void textTapeContinue()
         {
-            State = "Taping";
+            State = "Continued";
         }
 
         public void getExercise(string Path)
@@ -163,12 +154,14 @@ namespace VKR.Models
                     foreach (Error e in err)
                     {
                         line += e.error + " ";
+                        db.Errors.Remove(e);
                     }
                     line = line.Trim();
                     Tape = "          " + line;
                     State = "Taping";
                     //очистить бд
-                    db.Errors.RemoveRange(db.Errors.OrderBy(e => e.Id).FirstOrDefault(), db.Errors.OrderBy(e => e.Id).LastOrDefault());
+
+                    //db.Errors.RemoveRange(db.Errors.OrderBy(e => e.Id).FirstOrDefault(), db.Errors.OrderBy(e => e.Id).LastOrDefault());
                     db.SaveChanges();
                 }
                 else
@@ -179,7 +172,7 @@ namespace VKR.Models
             }
         }
 
-            public void tapeScroll()//при нажатии на кнопку сравниваемый символ перемещается к следующему
+        private void tapeScroll()//при нажатии на кнопку сравниваемый символ перемещается к следующему
         {
             if (Tape.Length > 11)
             {

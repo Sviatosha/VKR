@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace VKR.View
 {
@@ -19,12 +10,31 @@ namespace VKR.View
     /// </summary>
     public partial class Settings : Window
     {
-        public Settings()
+        public int numb_car;
+        private MainWindow mainWindow;
+        public Settings(MainWindow _mainWindow)
         {
             InitializeComponent();
+            mainWindow = _mainWindow;
         }
-
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            KeyboardSettings keyboardSettings = new KeyboardSettings(mainWindow);
+            keyboardSettings.Owner = this.Owner;
+            keyboardSettings.Show();
+        }
+        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string select = FontSize.SelectedValue.ToString();
+            if (select == "Мелкий")
+            {
+                mainWindow.Tape.Height = 50;
+            }
+            if (select == "Маленький")
+            {
+                mainWindow.Tape.Height = 70;
+            }
+        }
         private void PWI_Checked(object sender, RoutedEventArgs e) // Меню
         {
             RadioButton pressed = (RadioButton)sender;
