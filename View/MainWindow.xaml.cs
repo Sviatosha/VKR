@@ -1,19 +1,18 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using VKR.Models;
 using System.Windows.Threading;
-using System.Media;
-using WMPLib;
-using VKR.View.Lessons;
+using VKR.Models;
+using VKR.src.Database;
 using VKR.View.About;
 using VKR.View.Help;
-using System.Collections.Generic;
-using VKR.src.Database;
-using System.Windows.Documents;
+using VKR.View.Lessons;
+using WMPLib;
 
 namespace VKR.View
 {
@@ -33,13 +32,61 @@ namespace VKR.View
             Wait();// 
             timerCreate();// Создать таймер
 
+            var colors = new Dictionary<string, string>()
+            {
+                { "0", "#FF2400"},
+                { "1", "#FFB841"},
+                { "2", "#FFB841"},
+            };
+
         }
         private static TextTapeSingleton myTextTape = TextTapeSingleton.GetInstance();//singleton
         private DispatcherTimer timer = null;// Обьявление таймера
-        private int seconds=0, clicks=0, errors=0,cps=0;//секунды и нажатия
+        private int seconds = 0, clicks = 0, errors = 0, cpm = 0;//секунды и нажатия
         private List<string> Errors = new List<string>();
-        private List<int> ClicksPerSecond = new List<int>();
-        private string type="bsc";
+        private List<int> ClicksPerMinute = new List<int>();
+        private string type = "bsc";
+
+
+        /*BrushConverter bc = new BrushConverter();
+        string error_collor = "#2F353B";
+
+        private void KeyboardActivate(string key)
+        {
+
+            switch (key)
+            {
+                case "1":
+                    FirstRow1.Background = (Brush)bc.ConvertFrom(colors[key]);
+                    break;
+                case "2":
+                    FirstRow2.Background = (Brush)bc.ConvertFrom(colors[key]);
+                    break;
+                case "3":
+                    FirstRow3.Background = (Brush)bc.ConvertFrom(colors[key]);
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void KeyboardError(string key)
+        {
+            switch (key)
+            {
+                case "1":
+                    FirstRow1.Background = (Brush)bc.ConvertFrom(error_collor);
+                    break;
+                case "2":
+                    FirstRow2.Background = (Brush)bc.ConvertFrom(error_collor);
+                    break;
+                case "3":
+                    FirstRow3.Background = (Brush)bc.ConvertFrom(error_collor);
+                    break;
+                default:
+                    break;
+            }
+        }*/
+
         /*
         * Обработка таймера
         */
@@ -62,13 +109,17 @@ namespace VKR.View
 
         private void timerBackwards() // WIP Запуск таймера обратного отчёта
         {
-           
+
         }
         private void timerTick(object sender, EventArgs e) // Обработка изменения времени в таймере
         {
             seconds++;
-            ClicksPerSecond.Add(cps);
-            cps = 0;
+
+            if (seconds % 60 == 0)
+            {
+                ClicksPerMinute.Add(cpm);
+                cpm = 0;
+            }
             timerForm();
         }
         private void timerForm() // Обработка изменения времени в таймере
@@ -97,11 +148,16 @@ namespace VKR.View
 
         private void changeVision()// Видимость нажатой и следующей буквы
         {
-            if (myTextTape[0].State == "Taping")
+            if (myTextTape[0].State == "Start")
             {
                 TapeNextLetters.Visibility = Visibility.Visible;
                 TapeInputLetters.Visibility = Visibility.Visible;
                 timerStart();
+                myTextTape[0].State = "Taping";
+            }
+            else if (myTextTape[0].State == "Taping")
+            {
+
             }
             else if (myTextTape[0].State == "Wait")
             {
@@ -110,13 +166,36 @@ namespace VKR.View
             }
             else if (myTextTape[0].State == "End")
             {
-                myTextTape[0].State = "Wait";
+                Wait();
                 TapeNextLetters.Visibility = Visibility.Collapsed;
                 TapeInputLetters.Visibility = Visibility.Collapsed;
                 ExerciseEnd();
-                timerEnd();
             }
         }
+
+        /*private void AccuracyTrain() //Доработка
+        {
+            if (errors > 10)
+            {
+                MessageBox.Show("Упражнение провалено");
+                ExerciseEnd();
+            }
+        }
+        private void DexterityTrain()
+        {
+            if (errors > 10)
+            {
+                ExerciseEnd();
+            }
+        }
+        private void SpeedTrain()
+        {
+            if (errors > 10)
+            {
+                ExerciseEnd();
+            }
+        }*/
+
         private void Wait() //Экран ожидания
         {
             myTextTape[0].textTapeWait();
@@ -125,40 +204,44 @@ namespace VKR.View
 
         private void TextInputEvent(object sender, TextCompositionEventArgs e) //обработка нажатия для текстовой ленты
         {
-
-            clicks++;
-            cps++;
-            if (myTextTape[0].Tape[10].ToString() != e.Text)
+            if (myTextTape[0].State == "Taping" || myTextTape[0].State == "Start")
             {
-                errors++;
-                Errors.Add(e.Text);
-                TapeInputLetters.Foreground = Brushes.Red;
-            }
-            else
-            {
-                TapeInputLetters.Foreground = Brushes.Black;
+                clicks++;
+                cpm++;
+                if (myTextTape[0].Tape[10].ToString() != e.Text)
+                {
+                    errors++;
+                    Errors.Add(e.Text);
+                    TapeInputLetters.Foreground = Brushes.Red;
+                    //WrongKeyShow();
+                }
+                else
+                {
+                    TapeInputLetters.Foreground = Brushes.Black;
+                    //RightKeyShow();
+                }
 
-            }
-            myTextTape[0].keyClick(sender, e);
+                myTextTape[0].keyClick(sender, e);
 
-            string pressedLetter, letterToPress;
-            letterToPress = myTextTape[0].Tape[10].ToString();
-            pressedLetter = e.Text;
-            if (pressedLetter == " ")
-            {
-                pressedLetter = "Пробел";
-            }
-            if (letterToPress == " ")
-            {
-                letterToPress = "Пробел";
-            }
+                string pressedLetter, letterToPress;
+                letterToPress = myTextTape[0].Tape[10].ToString();
+                pressedLetter = e.Text;
+                if (pressedLetter == " ")
+                {
+                    pressedLetter = "Пробел";
+                }
+                if (letterToPress == " ")
+                {
+                    letterToPress = "Пробел";
+                }
 
-            TapeNextLetters.Text = $"Следующая клавиша: {letterToPress}";
-            TapeInputLetters.Text = $" Нажатая клавиша: {pressedLetter}";
+                TapeNextLetters.Text = $"Следующая клавиша: {letterToPress}";
+                TapeInputLetters.Text = $" Нажатая клавиша: {pressedLetter}";
 
-            Tape.Text = myTextTape[0].Tape;
-            changeVision();
-            soundPlay();
+                Tape.Text = myTextTape[0].Tape;
+                changeVision();
+                soundPlay();
+            }
         }
 
         private void loadFile() //загрузка своего файла
@@ -211,7 +294,7 @@ namespace VKR.View
             }
             if (pressed.Content.ToString() == "На скорость")
             {
-                TrainerSelected.Text = "Тренажёр: "+ pressed.Content.ToString();
+                TrainerSelected.Text = "Тренажёр: " + pressed.Content.ToString();
                 TrainerSelected.Visibility = Visibility.Visible;
                 type = "speed";
             }
@@ -247,7 +330,8 @@ namespace VKR.View
             }
             else if (menuItem.Header.ToString() == "Настройки")
             {
-                Settings settingsWindow = new Settings();
+                Settings settingsWindow = new Settings(this);
+                /*settingsWindow.Owner = this;*/
                 settingsWindow.Show();
             }
             else if (menuItem.Header.ToString() == "Помощь")
@@ -267,7 +351,7 @@ namespace VKR.View
             StatisticWindow statisticWindow = new StatisticWindow();
             statisticWindow.Show();
         }
-        
+
         private void Lessons_Click(object sender, RoutedEventArgs e) // Меню WIP
         {
             MenuItem menuItem = (MenuItem)sender;
@@ -279,15 +363,18 @@ namespace VKR.View
             }
             else if (menuItem.Header.ToString() == "Перед печатью")
             {
-
+                Lesson2 lesson2 = new Lesson2();
+                lesson2.Show();
             }
             else if (menuItem.Header.ToString() == "Метод десятепальцевой слепой печати")
             {
-
+                Lesson3 lesson3 = new Lesson3();
+                lesson3.Show();
             }
             else if (menuItem.Header.ToString() == "Для людей с ограниченными возможностями")
             {
-
+                Lesson4 lesson4 = new Lesson4();
+                lesson4.Show();
             }
         }
         private void Exercises_Click(object sender, RoutedEventArgs e) // Меню WIP
@@ -363,17 +450,25 @@ namespace VKR.View
 
         private void ExerciseEnd()
         {
+            timerEnd();
+            myTextTape[0].textTapeWait();
+
+            if (cpm != 0)
+            {
+                ClicksPerMinute.Add(cpm);
+                cpm = 0;
+            }
             using (StatisticContext db = new StatisticContext())
             {
 
                 Statistic statistic = new Statistic
-                { 
-                    Date = DateTime.Now, 
-                    type = this.type, 
+                {
+                    Date = DateTime.Now,
+                    type = this.type,
                     seconds = this.seconds,
                     errors = this.errors,
                     letters_count = clicks,
-                    clicksInSecond = ClicksPerSecond.ToArray()
+                    clicksInMinute = ClicksPerMinute.ToArray()
                 };
                 db.Statistics.Add(statistic);
                 db.SaveChanges();
@@ -384,7 +479,7 @@ namespace VKR.View
                 {
                     Error e = new Error
                     {
-                        error=err
+                        error = err
                     };
                     db.Errors.Add(e);
                 }
@@ -395,34 +490,44 @@ namespace VKR.View
         }
         private void counterNull()
         {
-            rbNone.IsChecked = true;
-            seconds = 0;
-            seconds = 0; clicks = 0; errors = 0; cps = 0;
+            //rbNone.IsChecked = true;
+            seconds = 0; clicks = 0; errors = 0; cpm = 0;
 
             Errors.Clear();
-            ClicksPerSecond.Clear();
+            ClicksPerMinute.Clear();
         }
-        
+
         /*
-        * Обработка клавиатуры и нажатий
+        * Обработка Горячих клавиш
         */
         private void KeyEvents(object sender, KeyEventArgs e)
         {
-
-
+            /*if (e.KeyboardDevice.Modifiers == ModifierKeys.Control && e.Key == Key.F1)
+                Pause();
+            if (e.KeyboardDevice.Modifiers == ModifierKeys.Control && e.Key == Key.F2)
+                Continue();*/
+            if (e.Key == System.Windows.Input.Key.Back && myTextTape[0].State == "Taping")
+                ExerciseEnd();
         }
         /*
         * Обработка звуков
         */
+        WindowsMediaPlayer wmp = new WindowsMediaPlayer();
+        string fullPath = Path.GetFullPath(@"..\..\..\src\sounds\keyboardClick.mp3");
         private void soundPlay() //
         {
-            WindowsMediaPlayer wmp = new WindowsMediaPlayer();
-            var fullPath = Path.GetFullPath(@"..\..\..\src\sounds\keyboardClick.mp3");
 
             wmp.URL = fullPath;
             wmp.controls.play();
         }
+        private void keyboardValidation() //
+        {
 
+        }
+        private void keyboardActivate() //
+        {
+
+        }
 
     }
 }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VKR.src.Database
@@ -18,12 +13,12 @@ namespace VKR.src.Database
         public int errors { get; set; }
         public int letters_count { get; set; }
 
-        public string clicksInSecondJson
+        public string clicksInMinuteJson
         {
-            get { return JsonConvert.SerializeObject(this.clicksInSecond); }
-            set { this.clicksInSecond = JsonConvert.DeserializeObject<int[]>(value); }
+            get { return JsonConvert.SerializeObject(this.clicksInMinute); }
+            set { this.clicksInMinute = JsonConvert.DeserializeObject<int[]>(value); }
         }
         [NotMapped]
-        public int[] clicksInSecond { get; set; }
+        public int[] clicksInMinute { get; set; }
     }
 }

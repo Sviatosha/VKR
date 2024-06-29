@@ -12,16 +12,16 @@
                 <StackPanel>
                     <Label Content="Режим для людей с ограниченными возможностями" FontSize="16" HorizontalAlignment="Center"></Label>
                     <Separator />
-                    <RadioButton GroupName="Trainers" Content="Включить" Checked="PWI_Checked" FontSize="16" />
-                    <Button Content="Настройка клавиатуры" Background="#FFCCCCCC" BorderBrush="Black" Foreground="#DD000000" />
+
+                    <Button Content="Настройка клавиатуры" Background="#FFCCCCCC" BorderBrush="Black" Foreground="#DD000000" Click="Button_Click"/>
                     <Separator />
                 </StackPanel>
                 <StackPanel>
                     <Label Content="Настройки текстовой ленты" FontSize="16" HorizontalAlignment="Center"></Label>
                     <Separator />
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Размер шрифта:" FontSize="16"></Label>
-                        <ComboBox HorizontalAlignment="Left" VerticalAlignment="Stretch" >
+                        <Label Content="Размер шрифта:" FontSize="16" HorizontalAlignment="Right"></Label>
+                        <ComboBox x:Name="FontSize" HorizontalAlignment="Left" VerticalAlignment="Stretch" SelectionChanged="SelectionChanged">
                             <ComboBoxItem>
                                 <StackPanel>
                                     <TextBlock FontSize="16">Мелкий</TextBlock>
